@@ -1,4 +1,6 @@
 -- Advent of code, day 01
+package.path = package.path .. [[;./src/?.lua]]
+local Utils = require('utils')
 
 -- http://math2.org/luasearch/rex.html
 local re = require('rex')
@@ -7,7 +9,7 @@ if nil == re then
 end
 
 local totals = {}
-
+local max = 0
 local sum = 0
 
 local function doLine(line, lineNum)
@@ -18,32 +20,26 @@ local function doLine(line, lineNum)
     io.write(match)
     sum = sum + tonumber(match)
   end
-  io.write(string.format(" : %5d\n", sum))
+  io.write(string.format(" = %5d\n", sum))
   if 0 == numMatches then
     totals[#totals + 1] = sum
+    if sum > max then
+      max = sum
+    end
     sum = 0
   end
 end
 
-
 --
 -- MAIN
 --
-local fNam = "data/01-01-input.txt"
-local f = io.open(fNam, "r")
-local lineNum = 1
-while true do
-  local line = f:read("*line")
-  if line == nil then break end
-    doLine(line, lineNum)
-  lineNum = lineNum + 1
-end
-doLine("", lineNum) -- one extra to process the final line = kludge
+local fNam = "data/01-01-test.txt"
+Utils.readAndProcessLines(fNam, doLine)
 
 table.sort(totals)
 
-local sum = totals[#totals] + totals[#totals - 1] + totals[#totals - 2]
+local finalSum = totals[#totals] + totals[#totals - 1] + totals[#totals - 2]
 
-print("sum:", sum)
+print("\n     max : " .. max, "\nfinalSum : " .. finalSum, "\n")
 
-print('done')
+print(' == done == ')
