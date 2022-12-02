@@ -1,17 +1,9 @@
--- Advent of code, day 01
+-- Advent of code, day 02
 package.path = package.path .. [[;./src/?.lua]]
 local Utils = require('utils')
 
 -- http://math2.org/luasearch/rex.html
--- local re = 
 require('rex') -- rex_posix
---if nil == re then
---  error('No Regex')
---end
-
--- print(rex.version())
---Utils.showTable(rex.flags())
---local RE_Extended = rex.flags()["EXTENDED"]
 
 -- Them | Us : Choice   : Score
 -- A    | X  : Rock     : 1
@@ -33,8 +25,8 @@ ResultToScore[ResultLoss] = 0
 ResultToScore[ResultDraw] = 3
 ResultToScore[ResultWin ] = 6
 
--- How to compare ABC with XYZ to give win/loss/draw
-local Compare = {
+-- Compare ABC with XYZ to give win/loss/draw
+local Part1GetResult = {
   X = { -- rock
     A = ResultDraw, -- rock
     B = ResultLoss, -- paper
@@ -52,9 +44,33 @@ local Compare = {
   },
 }
 
+local Part2GetResponse = {
+  A = {
+    X = 'Z', -- lose
+    Y = 'X', -- draw
+    Z = 'Y', -- win
+  },
+  B = {
+    X = 'X', -- lose
+    Y = 'Y', -- draw
+    Z = 'Z', -- win
+  },
+  C = {
+    X = 'Y', -- lose
+    Y = 'Z', -- draw
+    Z = 'X', -- win
+  },
+}
+
+local Part2ResultToScore = {
+  X = ResultLoss,
+  Y = ResultDraw,
+  Z = ResultWin,
+}
+
 local total = 0
 
-local function doLine(line, lineNum)
+local function part1(line, lineNum)
   if line == '' then
     return
   end
@@ -62,9 +78,28 @@ local function doLine(line, lineNum)
   io.write(string.format("%4d : %3s : ", lineNum, line))
   local them, us = rex.match(line, "^([A-C]).([X-Z])$")
   io.write(string.format("%s vs %s", them, us))
-  local result = Compare[us][them]
+  local result = Part1GetResult[us][them]
   io.write(string.format(" result: %2d", result))
   local score = ChoiceToScore[us] + ResultToScore[result]
+  io.write(string.format(" score: %d", score))
+  io.write("\n")
+  total = total +  score
+end
+
+local function part2(line, lineNum)
+  if line == '' then
+    return
+  end
+  
+  io.write(string.format("%4d : %3s : ", lineNum, line))
+  local them, result = rex.match(line, "^([A-C]).([X-Z])$")
+  io.write(string.format("(them:%s, result:%s) ", them, result))
+  local us = Part2GetResponse[them][result]
+  io.write(string.format("us:%2s ", us))
+  local choiceScore = ChoiceToScore[us]
+  local resultScore = ResultToScore[Part2ResultToScore[result]]
+  io.write(string.format("(%s + %s) ", tostring(choiceScore), tostring(resultScore)))
+  local score = choiceScore + resultScore
   io.write(string.format(" score: %d", score))
   io.write("\n")
   total = total +  score
@@ -73,8 +108,8 @@ end
 --
 -- MAIN
 --
-local fNam = "data/02-test.txt"
-Utils.readAndProcessLines(fNam, doLine, false, true)
+local fNam = "data/02-input.txt"
+Utils.readAndProcessLines(fNam, part2, false, true)
 
 print('total:' .. total)
 
