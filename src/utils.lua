@@ -7,16 +7,24 @@ function Utils.showTable(t)
   end
 end
 
-function Utils.readAndProcessLines(fNam, lineFunc)
+function Utils.readAndProcessLines(fNam, lineFunc, extraLineAtEnd, skipBlanks)
+  extraLineAtEnd = extraLineAtEnd or true
+  skipBlanks = skipBlanks or false
+  
   local f = io.open(fNam, "r")
   local lineNum = 1
   while true do
     local line = f:read("*line")
     if line == nil then break end
-    lineFunc(line, lineNum)
-    lineNum = lineNum + 1
+    if not skipBlanks or line ~= "" then
+      --print("LINE:", lineNum, line)
+      lineFunc(line, lineNum)
+      lineNum = lineNum + 1
+    end
   end
-  lineFunc("", lineNum) -- one extra to process the final line = kludge
+  if extraLineAtEnd then
+    lineFunc("", lineNum) -- one extra to process the final line = kludge
+  end
 end
 
 return Utils
