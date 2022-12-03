@@ -11,6 +11,8 @@ local Set = require('Set')
 require('rex') -- rex_posix
 
 local function charToNumber(c)
+  assert('string' == type(c), string.format('%s "%s"', type(c), c))
+  assert(1 == #c, c)
   local a = 1 + string.byte(c) - string.byte('a')
   if 0 > a then
     a = 1 + 26 + string.byte(c) - string.byte('A')
@@ -62,7 +64,12 @@ local function part2(line, lineNum)
     setSoFar = Set.intersection(setSoFar, set)
   else -- 2
     setSoFar = Set.intersection(setSoFar, set)
-    total = total + 1
+--    assert(1 == #setSoFar)
+    local badge = setSoFar[0]
+    io.write(string.format("\t so far: %s = %s", setSoFar, badge))
+    local score = charToNumber(badge)
+    total = total + score
+    return
   end
   io.write(string.format("\t so far: %s\n", setSoFar))
 end

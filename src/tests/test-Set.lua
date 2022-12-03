@@ -59,4 +59,12 @@ function testLen()
   luaunit.assertEquals(#a, 4)
 end
 
+function testAddFromIterator()
+  local s = Set.new()
+  local i = 0
+  local iterator = function() if i < 5 then i = i + 1 return i end end
+  s:addFromIterator(iterator)
+  luaunit.assertEquals(s, Set.new({1, 2, 3, 4, 5}))
+end
+
 luaunit.LuaUnit.run()

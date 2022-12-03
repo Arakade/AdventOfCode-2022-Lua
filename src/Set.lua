@@ -3,13 +3,14 @@
 local Set = {}
 
 function Set.new(o)
-  local set = {}
+  local set = { members = {} }
   if nil ~= o then
     for k,v in pairs(o) do
-      set[v] = 1
+      set.members[v] = 1
     end
   end
   setmetatable(set, Set)
+  -- set.__index = Set
   return set
 end
 
@@ -24,7 +25,7 @@ end
 function Set:__tostring()
   local s = '{'
   local count = 0
-  for k,v in pairs(self) do
+  for k,v in pairs(self.members) do
     if 0 ~= count then
       s = s .. ', '
     end
@@ -36,31 +37,31 @@ function Set:__tostring()
 end
 
 function Set:contains(v)
-  return nil ~= self[v]
+  return nil ~= self.members[v]
 end
 
 function Set:add(v)
-  self[v] = 1
+  self.members[v] = 1
 end
 
 function Set:remove(v)
-  self[v] = nil
+  self.members[v] = nil
 end
 
-function Set:equals(other)
-  return Set.equal(self, other)
+function Set:__eq(other)
+  return Set.areEqual(self, other)
 end
 
 -- Add values from an iterator
 function Set:addFromIterator(iterator)
   for v in iterator do
-    self[v] = 1
+    self:add(v)
   end
 end
 
---function Set:__len()
---  return #self
---end
+function Set:__len()
+  return #self.members
+end
 
 --
 -- STATIC FUNCTIONS
@@ -69,11 +70,17 @@ end
 --- Returns a new Set with members that are the keys present in either table.
 function Set.union(a, b)
   local union = Set.new()
-  for k in pairs(a) do
-    union[k] = 1
+  if nil == a.members then
+    a = Set.new(a)
   end
-  for k in pairs(b) do
-    union[k] = 1
+  if nil == b.members then
+    b = Set.new(b)
+  end
+  for k in pairs(a.members) do
+    union:add(k)
+  end
+  for k in pairs(b.members) do
+    union:add(k)
   end
   return union
 end
@@ -81,20 +88,30 @@ end
 --- Returns a new Set with members that are the present in both.
 function Set.intersection(a, b)
   local intersection = Set.new()
-  for k in pairs(a) do
-    if nil ~= b[k] then
-      intersection[k] = 1
+  if nil == a.members then
+    a = Set.new(a)
+  end
+  if nil == b.members then
+    b = Set.new(b)
+  end
+  for k in pairs(a.members) do
+    if b:contains(k) then
+      intersection:add(k)
     end
   end
   return intersection
 end
 
-function Set.__eq(a, b)
-  if #a ~= #b then
+function Set.areEqual(a, b)
+  if nil == a.members or nil == b.members then
     return false
   end
-  for k in pairs(a) do
-    if nil == b[k] then
+  
+  if #a.members ~= #b.members then
+    return false
+  end
+  for k in pairs(a.members) do
+    if not b:contains(k) then
       return false
     end
   end
