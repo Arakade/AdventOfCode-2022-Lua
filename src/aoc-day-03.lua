@@ -9,20 +9,6 @@ local Utils = require('utils')
 -- http://math2.org/luasearch/rex.html
 require('rex') -- rex_posix
 
--- Iterate through iterator, for each value returned, increment the count in the table.
-local function addCounts(table, iterator)
-  for c in iterator do
-    if counts[c] == nil then
-      counts[c] = 1
-    else
-      counts[c] = counts[c] + 1
-    end
-    io.write(string.format("%s(%d)", c, counts[c]))
-  end
-  return table
-end
-
--- TODO: Write a record 'which ones are in' function
 
 local function part1(line, lineNum)
   if line == '' then
@@ -34,15 +20,9 @@ local function part1(line, lineNum)
   local p2 = string.sub(line, 1 + #line / 2)
   io.write(string.format("(%s, %s) ", p1, p2))
   local counts = {}
-  for c in p1:gmatch(".") do
-    if counts[c] == nil then
-      counts[c] = 1
-    else
-      counts[c] = counts[c] + 1
-    end
+  Utils.recordPresence(counts, p1:gmatch("."))
     
-  end
-  Utils.showTable(counts)
+  -- Utils.showTable(counts)
   io.write('\n')
 end
 
