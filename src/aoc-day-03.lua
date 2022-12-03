@@ -64,11 +64,12 @@ local function part2(line, lineNum)
     setSoFar = Set.intersection(setSoFar, set)
   else -- 2
     setSoFar = Set.intersection(setSoFar, set)
---    assert(1 == #setSoFar)
-    local badge = setSoFar[0]
+    --assert(1 == #setSoFar, tostring(#setSoFar))
+    local badge = setSoFar[1]
     io.write(string.format("\t so far: %s = %s", setSoFar, badge))
     local score = charToNumber(badge)
     total = total + score
+    io.write('\n')
     return
   end
   io.write(string.format("\t so far: %s\n", setSoFar))
@@ -77,7 +78,7 @@ end
 --
 -- MAIN
 --
-local fNam = "data/03-test.txt"
+local fNam = "data/03-input.txt"
 Utils.readAndProcessLines(fNam, part2, false, true)
 print('total:' .. total)
 
