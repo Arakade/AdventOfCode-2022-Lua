@@ -43,12 +43,32 @@ local function part1(line, lineNum)
   io.write(' = NO DUPS\n')
 end
 
+local setSoFar = {}
+
+local function part2(line, lineNum)
+  if line == '' then
+    return
+  end
+  
+  local relativeLineNum = (lineNum - 1) % 3 -- 0, 1, 2
+  io.write(string.format("%4d: %3s (%d) : ", lineNum, line, relativeLineNum))
+  local counts = {}
+  Utils.recordPresence(counts, line:gmatch('.'))
+  if 0 == relativeLineNum then
+    setSoFar = counts
+  elseif 1 == relativeLineNum then
+    Utils.unionKeys(setSoFar, counts)
+  else -- 2
+  end
+  Utils.showKeys(counts)
+  io.write('\n')
+end
 
 --
 -- MAIN
 --
-local fNam = "data/03-input.txt"
-Utils.readAndProcessLines(fNam, part1, false, true)
+local fNam = "data/03-test.txt"
+Utils.readAndProcessLines(fNam, part2, false, true)
 print('total:' .. total)
 
 --luaunit.LuaUnit.run()

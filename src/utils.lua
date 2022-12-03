@@ -20,6 +20,20 @@ function Utils.showTable(t, newlineDelimited)
   end
 end
 
+---Print table keys like an array
+function Utils.showKeys(t)
+  io.write('[')
+  local count = 0
+  for k,v in pairs(t) do
+    if 0 ~= count then
+      io.write(', ')
+    end
+    io.write(string.format('%s', tostring(k)))
+    count = count + 1
+  end
+  io.write(']')
+end
+
 function Utils.readAndProcessLines(fNam, lineFunc, extraLineAtEnd, skipBlanks)
   extraLineAtEnd = extraLineAtEnd or true
   skipBlanks = skipBlanks or false
@@ -62,15 +76,32 @@ function Utils.recordPresence(counts, iterator)
   return counts
 end
 
---- Returns a new array table with members that are the keys present in both tables
+--- Returns a new array table with members that are the keys present in either table.
 function Utils.unionKeys(a, b)
+  local keysDone = {}
   local union = {}
-  for ka in pairs(a) do
-    if b[ka] ~= nil then
-      union[#union + 1] = ka
+  for k in pairs(a) do
+    keysDone[k] = 1 -- record presence for simpler skipping
+    union[#union + 1] = k
+  end
+  for k in pairs(b) do
+    -- only add those not already added
+    if keysDone[k] == nil then
+      union[#union + 1] = k
     end
   end
   return union
+end
+
+--- Returns a new array table with members that are the keys present in both tables
+function Utils.intersectKeys(a, b)
+  local intersection = {}
+  for k in pairs(a) do
+    if b[k] ~= nil then
+      intersection[#intersection + 1] = k
+    end
+  end
+  return intersection
 end
 
 --- Returns boolean indicating presence.
