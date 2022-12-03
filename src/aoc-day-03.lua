@@ -5,6 +5,7 @@ package.path = [[./src/?.lua;]] .. pathOrig
 local luaunit = require('luaunit')
 
 local Utils = require('utils')
+local Set = require('Set')
 
 -- http://math2.org/luasearch/rex.html
 require('rex') -- rex_posix
@@ -43,7 +44,7 @@ local function part1(line, lineNum)
   io.write(' = NO DUPS\n')
 end
 
-local setSoFar = {}
+local setSoFar = nil
 
 local function part2(line, lineNum)
   if line == '' then
@@ -52,16 +53,18 @@ local function part2(line, lineNum)
   
   local relativeLineNum = (lineNum - 1) % 3 -- 0, 1, 2
   io.write(string.format("%4d: %3s (%d) : ", lineNum, line, relativeLineNum))
-  local counts = {}
-  Utils.recordPresence(counts, line:gmatch('.'))
+  local set = Set.new()
+  set:addFromIterator(line:gmatch('.'))
+  io.write(string.format("\t%s, ", set))
   if 0 == relativeLineNum then
-    setSoFar = counts
+    setSoFar = set
   elseif 1 == relativeLineNum then
-    Utils.unionKeys(setSoFar, counts)
+    setSoFar = Set.intersection(setSoFar, set)
   else -- 2
+    setSoFar = Set.intersection(setSoFar, set)
+    total = total + 1
   end
-  Utils.showKeys(counts)
-  io.write('\n')
+  io.write(string.format("\t so far: %s\n", setSoFar))
 end
 
 --

@@ -54,4 +54,9 @@ function testIntersection()
   luaunit.assertEquals(Set.intersection(a, b), Set.new({3, 4}))
 end
 
+function testLen()
+  local a = Set.new({1, 2, 3, 4})
+  luaunit.assertEquals(#a, 4)
+end
+
 luaunit.LuaUnit.run()

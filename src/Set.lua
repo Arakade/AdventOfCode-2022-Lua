@@ -51,6 +51,17 @@ function Set:equals(other)
   return Set.equal(self, other)
 end
 
+-- Add values from an iterator
+function Set:addFromIterator(iterator)
+  for v in iterator do
+    self[v] = 1
+  end
+end
+
+--function Set:__len()
+--  return #self
+--end
+
 --
 -- STATIC FUNCTIONS
 --
