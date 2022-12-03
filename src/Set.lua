@@ -18,8 +18,21 @@ end
 -- MEMBER FUNCTIONS
 --
 
+--- Also allows retrieving by index within the Set.  Only really useful when single member!
 function Set:__index(table, key, ...)
-  return Set[table]
+  --print("__index, self:", self, "table:", table, "key:", key, "...", ...)
+  if nil ~= Set[table] then
+    return Set[table]
+  end
+  if 'number' == type(table) then
+    -- count down through iterators trying to get the table'th element
+    for k in pairs(self.members) do
+      if 1 == table then
+        return k
+      end
+      table = table - 1
+    end
+  end
 end
 
 function Set:__tostring()
@@ -62,6 +75,15 @@ end
 function Set:__len()
   return #self.members
 end
+
+function Set:__add(b)
+  return Set.union(self, b)
+end
+
+function Set:__sub(b)
+  return Set.intersection(self, b)
+end
+
 
 --
 -- STATIC FUNCTIONS

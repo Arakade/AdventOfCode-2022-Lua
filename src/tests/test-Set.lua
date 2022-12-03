@@ -48,10 +48,22 @@ function testUnion()
   luaunit.assertEquals(Set.union(a, b), Set.new({1, 2, 3, 4, 5, 6}))
 end
 
+function test__add()
+  local a = Set.new({1, 2, 3, 4})
+  local b = Set.new({3, 4, 5, 6})
+  luaunit.assertEquals(a + b, Set.new({1, 2, 3, 4, 5, 6}))
+end
+
 function testIntersection()
   local a = Set.new({1, 2, 3, 4})
   local b = Set.new({3, 4, 5, 6})
   luaunit.assertEquals(Set.intersection(a, b), Set.new({3, 4}))
+end
+
+function test__sub()
+  local a = Set.new({1, 2, 3, 4})
+  local b = Set.new({3, 4, 5, 6})
+  luaunit.assertEquals(a - b, Set.new({3, 4}))
 end
 
 function testLen()
@@ -65,6 +77,11 @@ function testAddFromIterator()
   local iterator = function() if i < 5 then i = i + 1 return i end end
   s:addFromIterator(iterator)
   luaunit.assertEquals(s, Set.new({1, 2, 3, 4, 5}))
+end
+
+function testIndex()
+  local a = Set.new({'hello'})
+  luaunit.assertEquals(a[1], 'hello')
 end
 
 luaunit.LuaUnit.run()
