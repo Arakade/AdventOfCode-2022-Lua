@@ -1,16 +1,29 @@
 
 local Utils = {}
 
-function Utils.showTable(t)
-  for k,v in ipairs(t) do
-    io.write(k, " : ", v, "\n")
+---Print table 1-level deep, all on one line by default.
+function Utils.showTable(t, newlineDelimited)
+  newlineDelimited = newlineDelimited or false
+  io.write('{')
+  local count = 0
+  for k,v in pairs(t) do
+    if newlineDelimited then
+      io.write('\n ')
+    end
+    io.write(string.format(' {%s: "%s" (%s)}', tostring(k), tostring(v), type(v)))
+    count = count + 1
+  end
+  if 0 ~= count and newlineDelimited then
+    io.write('\n}\n')
+  else 
+    io.write(' }')
   end
 end
 
 function Utils.readAndProcessLines(fNam, lineFunc, extraLineAtEnd, skipBlanks)
   extraLineAtEnd = extraLineAtEnd or true
   skipBlanks = skipBlanks or false
-  
+
   local f = io.open(fNam, "r")
   local lineNum = 1
   while true do
