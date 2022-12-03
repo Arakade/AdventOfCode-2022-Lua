@@ -62,4 +62,26 @@ function Utils.recordPresence(counts, iterator)
   return counts
 end
 
+--- Returns a new array table with members that are the keys present in both tables
+function Utils.unionKeys(a, b)
+  local union = {}
+  for ka in pairs(a) do
+    if b[ka] ~= nil then
+      union[#union + 1] = ka
+    end
+  end
+  return union
+end
+
+--- Returns boolean indicating presence.
+function Utils.tableHasValue(t, value)
+    for _, v in pairs(t) do
+        if value == v then
+            return true
+        end
+    end
+
+    return false
+end
+
 return Utils
