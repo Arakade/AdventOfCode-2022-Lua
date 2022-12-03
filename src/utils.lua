@@ -40,4 +40,26 @@ function Utils.readAndProcessLines(fNam, lineFunc, extraLineAtEnd, skipBlanks)
   end
 end
 
+--- Iterate through iterator, for each value returned, increment the count in the table.
+function Utils.addCounts(counts, iterator)
+  for c in iterator do
+    if counts[c] == nil then
+      counts[c] = 1
+    else
+      counts[c] = counts[c] + 1
+    end
+    --io.write(string.format("%s(%d)", c, counts[c]))
+  end
+  return counts
+end
+
+--- Iterate through iterator, for each value returned, set the value 1.
+function Utils.recordPresence(counts, iterator)
+  for c in iterator do
+    counts[c] = 1
+    --io.write(string.format("%s(%d)", c, counts[c]))
+  end
+  return counts
+end
+
 return Utils
