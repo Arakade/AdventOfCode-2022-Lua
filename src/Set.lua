@@ -21,9 +21,6 @@ end
 --- Also allows retrieving by index within the Set.  Only really useful when single member!
 function Set:__index(table, key, ...)
   --print("__index, self:", self, "table:", table, "key:", key, "...", ...)
-  if nil ~= Set[table] then
-    return Set[table]
-  end
   if 'number' == type(table) then
     -- count down through iterators trying to get the table'th element
     for k in pairs(self.members) do
@@ -32,6 +29,9 @@ function Set:__index(table, key, ...)
       end
       table = table - 1
     end
+  end
+  if nil ~= Set[table] then
+    return Set[table]
   end
 end
 
