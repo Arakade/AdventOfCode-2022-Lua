@@ -28,7 +28,7 @@ end
 function Stack:__tostring()
   local s = '{'
   local count = 0
-  for k,v in pairs(self.members) do
+  for _,v in pairs(self.members) do
     if 0 ~= count then
       s = s .. ', '
     end
@@ -51,6 +51,17 @@ end
 
 function Stack:__eq(other)
   return Stack.areEqual(self, other)
+end
+
+function Stack:__ipairs()
+  local i = 1
+  return function ()
+    if i <= #self.members then
+      local v = self.members[i]
+      i = i + 1
+      return v
+    end
+  end
 end
 
 -- Add values from an iterator

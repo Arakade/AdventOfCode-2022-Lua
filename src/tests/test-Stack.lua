@@ -70,4 +70,12 @@ function testIndex()
   luaunit.assertEquals(a[1], 'hello')
 end
 
+function testPairs()
+  local expected = {5, 6, 7, 8}
+  local s = Stack.new({5, 6, 7, 8})
+  for i,v in ipairs(s) do
+    luaunit.assertEquals(v, expected[i])
+  end
+end
+
 luaunit.LuaUnit.run()
