@@ -26,6 +26,29 @@ local function dumpStacks()
   end
 end
 
+local function moveCratesPart1(num, from, to)
+  for i = 1, num do
+    stacks[to]:push(stacks[from]:pop())
+--    local v = stacks[from]:pop()
+--    log("moving %s from %d:%s to %d:%s\n", v, from, stacks[from], to, stacks[to])
+--    stacks[to]:push(v)
+  end
+end
+
+local function moveCratesPart2(num, from, to)
+  local onCrane = Stack.new()
+  -- load crane
+  for i = 1, num do
+    onCrane:push(stacks[from]:pop())
+  end
+  -- unload crane
+  for i = 1, num do
+    stacks[to]:push(onCrane:pop())
+  end
+end
+
+local moveCrates
+
 local function parseInstructions(line, lineNum)
   local numMatches = 0
   local num, from, to = rex.match(line, [[^move (\d+) from (\d+) to (\d+)]])
@@ -34,12 +57,7 @@ local function parseInstructions(line, lineNum)
   assert(nil ~= from)
   assert(nil ~= to)
   num, from, to = tonumber(num), tonumber(from), tonumber(to)
-  for i = 1, num do
-    stacks[to]:push(stacks[from]:pop())
---    local v = stacks[from]:pop()
---    log("moving %s from %d:%s to %d:%s\n", v, from, stacks[from], to, stacks[to])
---    stacks[to]:push(v)
-  end
+  moveCrates(num, from, to)
 end
 
 local function invertAllStacks()
@@ -78,7 +96,7 @@ local function parseStacks(line, lineNum)
   end
 end
 
-local function part1(line, lineNum)
+local function process(line, lineNum)
   if line == '' then
     return
   end
@@ -101,7 +119,11 @@ end
 --
 local fNam = "data/05-input.txt"
 phase = parseStacks
-Utils.readAndProcessLines(fNam, part1, false, true)
+-- part 1:
+moveCrates = moveCratesPart1
+-- part 2:
+moveCrates = moveCratesPart2
+Utils.readAndProcessLines(fNam, process, false, true)
 
 log("Results:\n")
 dumpStacks()
