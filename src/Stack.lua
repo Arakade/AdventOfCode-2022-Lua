@@ -49,6 +49,10 @@ function Stack:pop()
   return v
 end
 
+function Stack:peek()
+  return self.members[#self.members]
+end
+
 function Stack:__eq(other)
   return Stack.areEqual(self, other)
 end

@@ -90,4 +90,14 @@ function testInvertOdd()
   luaunit.assertEquals(s, Stack.new({8, 7, 6, 5, 4}))
 end
 
+function testPeekSome()
+  local s = Stack.new({4, 5, 6, 7, 8})
+  luaunit.assertEquals(s:peek(), 8)
+end
+
+function testPeekNone()
+  local s = Stack.new({})
+  luaunit.assertEquals(s:peek(), nil)
+end
+
 luaunit.LuaUnit.run()
