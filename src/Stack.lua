@@ -75,6 +75,15 @@ function Stack:__len()
   return #self.members
 end
 
+function Stack:invert()
+  local len = #self.members
+  local len_2 = len / 2
+  for i = 0,len_2 - 1 do
+    -- swap
+    self.members[i + 1], self.members[len - i] = self.members[len - i], self.members[i + 1]
+  end
+end
+
 --
 -- STATIC FUNCTIONS
 --

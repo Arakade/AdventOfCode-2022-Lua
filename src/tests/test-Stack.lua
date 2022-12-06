@@ -78,4 +78,16 @@ function testPairs()
   end
 end
 
+function testInvertEven()
+  local s = Stack.new({5, 6, 7, 8})
+  s:invert()
+  luaunit.assertEquals(s, Stack.new({8, 7, 6, 5}))
+end
+
+function testInvertOdd()
+  local s = Stack.new({4, 5, 6, 7, 8})
+  s:invert()
+  luaunit.assertEquals(s, Stack.new({8, 7, 6, 5, 4}))
+end
+
 luaunit.LuaUnit.run()
