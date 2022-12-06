@@ -28,7 +28,7 @@ end
 
 local function parseInstructions(line, lineNum)
   local numMatches = 0
-  local num, from, to = rex.match(line, [[^move (\d) from (\d) to (\d)]])
+  local num, from, to = rex.match(line, [[^move (\d+) from (\d+) to (\d+)]])
   log("(%s-%s-%s)", num, from, to)
   assert(nil ~= num)
   assert(nil ~= from)
@@ -99,7 +99,7 @@ end
 --
 -- MAIN
 --
-local fNam = "data/05-test.txt"
+local fNam = "data/05-input.txt"
 phase = parseStacks
 Utils.readAndProcessLines(fNam, part1, false, true)
 
