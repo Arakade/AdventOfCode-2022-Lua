@@ -9,31 +9,36 @@ local Utils = require('utils')
 -- http://math2.org/luasearch/rex.html
 require('rex') -- rex_posix
 
-local AOC6 = {}
+local AOC = {}
+
+AOC.patternLength = 4
 
 local function checkFrom(i, line)
   local c = {}
-  for j = 0,3 do
+  for j = 0,AOC.patternLength-1 do
     local k = i - j
 --    c[4 - j] = line:sub(k, k)
     local letter = line:sub(k, k)
+    Utils.log("%s,", letter)
     if c[letter] then
+      Utils.log(" = nope\n")
       return false
     end
     c[letter] = true
   end  
   --Utils.log("[%s,%s,%s,%s]\n", c[1], c[2], c[3], c[4])
-  --Utils.showTable(c, true)
+  Utils.showTable(c, true)
   return true
 end
 
-function AOC6.part1(line, lineNum)
+
+function AOC.part1(line, lineNum)
   --local regex = [[(?<!q)m]]
   --local match = rex.find(line, regex, 3)
   -- phase 1 populate buffer with inital 3 chars
   -- iterate forwards shuffling letters backwards
-  for i = 4, #line do
-    Utils.log("[%d]", i)
+  for i = AOC.patternLength, #line do
+    Utils.log("  %d:", i)
     if checkFrom(i, line) then
       Utils.log(" found %d", i) 
       return i
@@ -42,26 +47,30 @@ function AOC6.part1(line, lineNum)
 end
 
 local testData = {
-  { input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb", expected = 7 },
-  { input = "bvwbjplbgvbhsrlpgdmjqwftvncz", expected = 5 },
-  { input = "nppdvjthqldpwncqszvftbrmjlhg", expected = 6 },
-  { input = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", expected = 10 },
-  { input = "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", expected = 11 },
+  { input = "mjqjpqmgbljsphdztnvjfqwrcgsmlb", expected = { 7, 19 } },
+  { input = "bvwbjplbgvbhsrlpgdmjqwftvncz", expected = { 5, 23 } },
+  { input = "nppdvjthqldpwncqszvftbrmjlhg", expected = { 6, 23 } },
+  { input = "nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg", expected = { 10, 29 } },
+  { input = "zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw", expected = { 11, 26 } },
 }
 
-local function doTest(input, expected)
-  local actual = part1(input, 1)
+local function doTest(input, patternLength, expected)
+  Utils.log("patternLength:%d:\n", patternLength)
+  AOC.patternLength = patternLength
+  local actual = AOC.part1(input, 1)
   luaunit.assertEquals(actual, expected)
 end
 
 function testAll()
   for i,v in ipairs(testData) do
     log("\nTest %d: ", i)
-    doTest(v.input, v.expected)
+    doTest(v.input, 4, v.expected[1])
+    log("\nTest %d: ", i)
+    doTest(v.input, 7, v.expected[2])
     log("\n")
   end
 end
 
---luaunit.LuaUnit.run()
+luaunit.LuaUnit.run()
 
-return AOC6
+return AOC

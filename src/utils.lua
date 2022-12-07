@@ -46,6 +46,10 @@ function Utils.readAndProcessLines(fNam, lineFunc, extraLineAtEnd, skipBlanks)
   skipBlanks = skipBlanks or false
 
   local f = io.open(fNam, "r")
+  if nil == f then
+    error(string.format('Failed to open file "%s"', fNam))
+  end
+  
   local lineNum = 1
   while true do
     local line = f:read("*line")
