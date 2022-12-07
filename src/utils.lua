@@ -1,6 +1,13 @@
 
 local Utils = {}
 
+-- let's pollute the global namespace!
+function log(fmtMsg, ...)
+  io.write(string.format(fmtMsg, ...))
+end
+
+Utils.log = log
+
 ---Print table 1-level deep, all on one line by default.
 function Utils.showTable(t, newlineDelimited)
   newlineDelimited = newlineDelimited or false
