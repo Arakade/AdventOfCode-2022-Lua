@@ -11,6 +11,7 @@ local AOC6 = require('aoc-day-06-lib')
 -- MAIN
 --
 local fNam = "data/06-input.txt"
-Utils.readAndProcessLines(fNam, AOC6.part1, false, true)
+AOC6.setPatternLength(14)
+Utils.readAndProcessLines(fNam, AOC6.process, false, true)
 
 print(' == done == ')

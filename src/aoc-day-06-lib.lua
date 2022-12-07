@@ -5,10 +5,12 @@ package.path = [[./src/?.lua;]] .. pathOrig
 local luaunit = require('luaunit')
 
 local Utils = require('utils')
+local Log = require('Log')
 
 -- http://math2.org/luasearch/rex.html
 require('rex') -- rex_posix
 
+Log.doLog = false
 local AOC = {}
 
 AOC.patternLength = 4
@@ -19,31 +21,40 @@ local function checkFrom(i, line)
     local k = i - j
 --    c[4 - j] = line:sub(k, k)
     local letter = line:sub(k, k)
-    Utils.log("%s,", letter)
+    Log:log("%s,", letter)
     if c[letter] then
-      Utils.log(" = nope\n")
+      Log:log(" = nope\n")
       return false
     end
     c[letter] = true
   end  
-  --Utils.log("[%s,%s,%s,%s]\n", c[1], c[2], c[3], c[4])
-  Utils.showTable(c, true)
+  Log:log("Found:")
+  for k,_ in pairs(c) do
+    Log:log(k)
+  end
+  
   return true
 end
 
+function AOC.setPatternLength(newLength)
+  print("Updating patternLength from " .. AOC.patternLength .. " to " .. newLength)
+  AOC.patternLength = newLength
+end
 
-function AOC.part1(line, lineNum)
+function AOC.process(line, lineNum)
+  Log:log("processing " .. line)
   --local regex = [[(?<!q)m]]
   --local match = rex.find(line, regex, 3)
   -- phase 1 populate buffer with inital 3 chars
   -- iterate forwards shuffling letters backwards
   for i = AOC.patternLength, #line do
-    Utils.log("  %d:", i)
+    Log:log("  %d:", i)
     if checkFrom(i, line) then
-      Utils.log(" found %d", i) 
+      print(" = " .. i)  -- deliberately use print to show answer
       return i
     end
   end
+  --error("Failed to find anything")
 end
 
 local testData = {
@@ -55,22 +66,22 @@ local testData = {
 }
 
 local function doTest(input, patternLength, expected)
-  Utils.log("patternLength:%d:\n", patternLength)
-  AOC.patternLength = patternLength
-  local actual = AOC.part1(input, 1)
+  Log:log("patternLength:%d:\n", patternLength)
+  AOC.setPatternLength(patternLength)
+  local actual = AOC.process(input, 1)
   luaunit.assertEquals(actual, expected)
 end
 
 function testAll()
   for i,v in ipairs(testData) do
-    log("\nTest %d: ", i)
+    Log:log("\nTest %d: ", i)
     doTest(v.input, 4, v.expected[1])
-    log("\nTest %d: ", i)
-    doTest(v.input, 7, v.expected[2])
-    log("\n")
+    Log:log("\nTest %d: ", i)
+    doTest(v.input, 14, v.expected[2])
+    Log:log("\n")
   end
 end
 
-luaunit.LuaUnit.run()
+--luaunit.LuaUnit.run()
 
 return AOC
